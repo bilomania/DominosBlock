@@ -23,33 +23,19 @@ public class GameplayManager : MonoBehaviour
 
     public bool playerPlayed = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         pool = boneYard;
-
-        // foreach(GameObject obj in boneYard)
-        // {
-        //     GameObject dominoInstance = Instantiate(obj);
-        //     dominoInstance.transform.SetParent(playGround.transform);
-        // }
         GameInit();
-
-        totalDominoesPlaced = 4;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void GameInit()
     {
         currentTurn = 0;
         playerPlayed = true;
 
-        for(int i = 0 ;i < 7;i++)
+        for(int i = 0 ;i < 7;i++) //draw 7 dominos from boneyard for player
         {
             GameObject randomDomino = pool[Random.Range(0,pool.Count-1)];
             playerHand.Add(randomDomino);
@@ -58,7 +44,7 @@ public class GameplayManager : MonoBehaviour
             randomDominoInstance.transform.SetParent(playerHandObj.transform);
         }
 
-        for(int i = 0 ;i < 7;i++)
+        for(int i = 0 ;i < 7;i++) //draw 7 dominos from boneyard for enemy
         {
             GameObject randomDomino = pool[Random.Range(0,pool.Count-1)];
             enemyHand.Add(randomDomino);
@@ -68,15 +54,9 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    public void Turn()
+    public void Turn() //attempt to create the enemy's turn
     {
-    //    foreach(GameObject obj in enemyHand)
-    //    {
-    //        if((obj.GetComponent<DominoObj>().topNum || obj.GetComponent<DominoObj>().bottomNum) == )
-    //        {
 
-    //        }
-    //    }
     }
 
     public void GameFinish()

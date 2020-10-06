@@ -10,8 +10,9 @@ public class DominoObj : MonoBehaviour
     public int topNum = 0;
     public int bottomNum = 0;
 
+    // Snap points to check for available domino slot
     public GameObject snapTop;
-    public GameObject snapBottom;
+    public GameObject snapBottom;      
     public GameObject snapLeft;
     public GameObject snapRight;
 
@@ -20,82 +21,70 @@ public class DominoObj : MonoBehaviour
     float imageWidth;
     float imageHeight;
 
-    // Start is called before the first frame update
     void Start()
     {
         gameplay = FindObjectOfType<GameplayManager>();
         imageWidth = GetComponent<RectTransform>().rect.width;
         imageHeight = GetComponent<RectTransform>().rect.height;
-        //print("name : " + gameObject.name);
-        //mainImage = Resources.Load<Sprite>("dominos2D/"+ gameObject.name.Split(char.Parse("_"))[1].Split(char.Parse("("))[0]);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
-
+    // when player/machine taps a domino from their hand
     public void OnTap()
     {
         RectTransform playGroundRect = gameplay.playGround.GetComponent<RectTransform>();
         transform.SetParent(playGroundRect.transform, false);
 
+        //At the start of the match
         if(gameplay.currentTurn <= 0)
         {
             transform.localPosition = new Vector2(0,0);
             transform.localRotation = Quaternion.Euler(0,0,90);
         }
-        else
+        else // for every other turn
         {
-            foreach(GameObject obj in gameplay.placedDominos)
+            foreach(GameObject obj in gameplay.placedDominos) //iteration inside the placed dominos
             {
-                DominoObj dominoScript = obj.GetComponent<DominoObj>();
-                if(dominoScript.topNum == dominoScript.bottomNum)
+                DominoObj dominoScript = obj.GetComponent<DominoObj>();//fetch the domino script from placed domino
+                if(dominoScript.topNum == dominoScript.bottomNum) //when the placed domino has double number
                 {
                     if(topNum == dominoScript.topNum && dominoScript.snapLeft.activeInHierarchy)
                     {
-                        print("6");
+                        print("double domino 1");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x - imageHeight,dominoScript.transform.localPosition.y);
-                        //transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapLeft.SetActive(false);
                         snapTop.SetActive(false);
                         return;
                     }
                     else if(topNum  == dominoScript.topNum && dominoScript.snapRight.activeInHierarchy)
                     {
-                        print("7");
+                        print("double domino 2");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x + imageHeight,dominoScript.transform.localPosition.y);
-                        //transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapRight.SetActive(false);
                         snapTop.SetActive(false);
                         return;
                     }
                     else if(bottomNum  == dominoScript.topNum && dominoScript.snapLeft.activeInHierarchy)
                     {
-                        print("8");
+                        print("double domino 3");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x - imageHeight,dominoScript.transform.localPosition.y);
-                        //transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapLeft.SetActive(false);
                         snapBottom.SetActive(false);
                         return;
                     }
                     else if(bottomNum  == dominoScript.topNum && dominoScript.snapRight.activeInHierarchy)
                     {
-                        print("9");
+                        print("double domino 4");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x + imageHeight,dominoScript.transform.localPosition.y);
-                        //transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapRight.SetActive(false);
                         snapBottom.SetActive(false);
                         return;
                     }
                 }
-                else
+                else //when the placed domino has different numbers
                 {
                     if((topNum == dominoScript.topNum) && dominoScript.snapTop.activeInHierarchy)
                     {
-                        print("1");
-                        //transform.SetParent(dominoScript.transform, false);
+                        print("single dominos 1");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x - imageHeight,dominoScript.transform.localPosition.y);
                         transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapTop.SetActive(false);
@@ -104,8 +93,7 @@ public class DominoObj : MonoBehaviour
                     }
                     else if((topNum == dominoScript.bottomNum) && dominoScript.snapBottom.activeInHierarchy)
                     {   
-                        print("2");
-                        //transform.SetParent(dominoScript.transform, false);
+                        print("single dominos 2");
                         transform.localPosition = new Vector2(dominoScript.snapBottom.transform.localPosition.x + imageHeight,dominoScript.transform.localPosition.y);
                         transform.localRotation = Quaternion.Euler(0,0,90);
                         dominoScript.snapBottom.SetActive(false);
@@ -114,8 +102,7 @@ public class DominoObj : MonoBehaviour
                     }
                     else if((bottomNum == dominoScript.topNum) && dominoScript.snapTop.activeInHierarchy)
                     {
-                        print("3");
-                        //transform.SetParent(dominoScript.transform, false);
+                        print("single dominos 3");
                         transform.localPosition = new Vector2(dominoScript.snapTop.transform.localPosition.x - imageHeight,dominoScript.transform.localPosition.y);
                         transform.localRotation = Quaternion.Euler(0,0,180);
                         dominoScript.snapTop.SetActive(false);
@@ -124,8 +111,7 @@ public class DominoObj : MonoBehaviour
                     }
                     else if((bottomNum == dominoScript.bottomNum) && dominoScript.snapBottom.activeInHierarchy)
                     {
-                        print("4");
-                        //transform.SetParent(dominoScript.transform, false);
+                        print("single dominos 4");
                         transform.localPosition = new Vector2(dominoScript.snapBottom.transform.localPosition.x + imageHeight,dominoScript.transform.localPosition.y);
                         transform.localRotation = Quaternion.Euler(0,0,-90);
                         dominoScript.snapBottom.SetActive(false);
@@ -134,20 +120,20 @@ public class DominoObj : MonoBehaviour
                     }
                     else
                     {
-                        print("5");
-                        //pass turn
+                        print("pass");
                     }
                 }
             }
         }
 
-        gameplay.currentTurn ++;
-        gameplay.placedDominos.Add(gameObject);
-        if(gameplay.playerPlayed)
-        {
-            gameplay.playerPlayed = false;
-            gameplay.Turn();
-        }
+        gameplay.currentTurn ++; //increment of turns
+        gameplay.placedDominos.Add(gameObject); //add the tapped domino to the placed dominos
+        // if(gameplay.playerPlayed) // an attempt for enemy turn
+        // {
+        //     gameplay.playerPlayed = false;
+        //     gameplay.Turn();
+        // }
+
     }
     
 }
